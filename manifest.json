@@ -1,0 +1,17 @@
+
+{
+  "name": "Idle Factory",
+  "short_name": "Idle Factory",
+  "description": "An incremental game about building a mining empire. Start by clicking for ore, then buy automated machines and powerful upgrades to increase your production and become an industrial tycoon.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#1a202c",
+  "theme_color": "#2d3748",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

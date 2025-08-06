@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { formatNumber } from '../utils/format';
 import { OreIcon } from './icons';
-import type { Stats } from '../types';
+import type { Stats } from '../game/types';
 
 interface ClickerProps {
   onClick: () => void;

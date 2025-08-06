@@ -1,17 +1,14 @@
-
 import React from 'react';
-import type { Machine, Upgrade, ResourceName, Resources, Stats, Zone, Achievement, ResearchNode } from './types';
+import type { Machine, Upgrade, ResourceName, Resources, Stats } from './types';
 import type { IconProps } from '../components/icons';
 import { 
     AutoMinerIcon, DrillIcon, CrusherIcon, SmelterIcon, PickaxeIcon, GearIcon, FactoryIcon, CircuitIcon, 
-    MoneyIcon, TechCoreIcon, OreIcon, IronIcon, CopperIcon, GoldIcon, WrenchScrewdriverIcon, CopperWireIcon,
-    ResearchPointIcon, IronPlateIcon
+    MoneyIcon, TechCoreIcon, OreIcon, IronIcon, CopperIcon, GoldIcon, WrenchScrewdriverIcon, CopperWireIcon
 } from '../components/icons';
 
 export const RESOURCE_DATA: Record<ResourceName, { name: string; icon: React.ReactElement<IconProps>; sellPrice?: number }> = {
     money: { name: 'Money', icon: React.createElement(MoneyIcon, { className: "text-green-400" }) },
     techCore: { name: 'Tech Cores', icon: React.createElement(TechCoreIcon, { className: "text-purple-400" }) },
-    researchPoint: { name: 'Research', icon: React.createElement(ResearchPointIcon, { className: "text-blue-400" }) },
     ore: { name: 'Raw Ore', icon: React.createElement(OreIcon, { className: "text-gray-400" }), sellPrice: 0.25 },
     iron: { name: 'Iron Ore', icon: React.createElement(IronIcon, { className: "text-orange-300" }), sellPrice: 1 },
     copper: { name: 'Copper Ore', icon: React.createElement(CopperIcon, { className: "text-orange-500" }), sellPrice: 2 },
@@ -19,17 +16,12 @@ export const RESOURCE_DATA: Record<ResourceName, { name: string; icon: React.Rea
     uranium: { name: 'Uranium Ore', icon: React.createElement(OreIcon, null) },
     titanium: { name: 'Titanium Ore', icon: React.createElement(OreIcon, null) },
     ironIngot: { name: 'Iron Ingot', icon: React.createElement(IronIcon, { className: "text-orange-200" }), sellPrice: 5 },
-    ironPlate: { name: 'Iron Plate', icon: React.createElement(IronPlateIcon, { className: "text-slate-300" }), sellPrice: 15 },
     copperWire: { name: 'Copper Wire', icon: React.createElement(CopperWireIcon, { className: "text-orange-400" }), sellPrice: 12 },
     goldBar: { name: 'Gold Bar', icon: React.createElement(GoldIcon, null) },
     circuit: { name: 'Circuit', icon: React.createElement(CircuitIcon, { className: "text-green-500" }) },
 };
 
-export const ZONES: Zone[] = [
-    { id: 'surface', name: 'Surface Quarry', unlocksAt: { resource: 'money', amount: 0 } },
-    { id: 'subsurface', name: 'Subsurface Crust', unlocksAt: { resource: 'ironIngot', amount: 500 } },
-    { id: 'molten', name: 'Molten Caverns', unlocksAt: { resource: 'goldBar', amount: 100 } },
-];
+export const MACHINE_CATEGORIES: Machine['category'][] = ['Miners', 'Smelters', 'Assemblers'];
 
 export const INITIAL_MACHINES: Machine[] = [
   {
@@ -43,9 +35,7 @@ export const INITIAL_MACHINES: Machine[] = [
     output: { ore: 1 },
     productionTime: 2000,
     count: 0,
-    icon: React.createElement(AutoMinerIcon, { className: "w-8 h-8 text-accent-light" }),
-    zoneId: 'surface',
-    unlocked: true,
+    icon: React.createElement(AutoMinerIcon, { className: "w-8 h-8 text-accent-light" })
   },
   {
     id: 'deep_miner',
@@ -58,39 +48,20 @@ export const INITIAL_MACHINES: Machine[] = [
     output: { iron: 2, copper: 1 },
     productionTime: 5000,
     count: 0,
-    icon: React.createElement(DrillIcon, { className: "w-8 h-8 text-accent-light" }),
-    zoneId: 'surface',
-    unlocked: true,
+    icon: React.createElement(DrillIcon, { className: "w-8 h-8 text-accent-light" })
   },
   {
     id: 'iron_smelter',
     name: 'Iron Smelter',
     description: 'Smelts iron ore into more valuable iron ingots.',
     category: 'Smelters',
-    baseCost: { money: 500, ore: 50 },
-    cost: { money: 500, ore: 50 },
+    baseCost: { money: 500 },
+    cost: { money: 500 },
     recipe: { iron: 2 },
     output: { ironIngot: 1 },
     productionTime: 3000,
     count: 0,
-    icon: React.createElement(SmelterIcon, { className: "w-8 h-8 text-accent-light" }),
-    zoneId: 'surface',
-    unlocked: true,
-  },
-   {
-    id: 'plate_press',
-    name: 'Plate Press',
-    description: 'Presses iron ingots into sturdy iron plates.',
-    category: 'Processors',
-    baseCost: { money: 2500, ironIngot: 20 },
-    cost: { money: 2500, ironIngot: 20 },
-    recipe: { ironIngot: 2 },
-    output: { ironPlate: 1 },
-    productionTime: 4000,
-    count: 0,
-    icon: React.createElement(FactoryIcon, { className: "w-8 h-8 text-slate-400" }),
-    zoneId: 'subsurface',
-    unlocked: false,
+    icon: React.createElement(SmelterIcon, { className: "w-8 h-8 text-accent-light" })
   },
   {
     id: 'copper_furnace',
@@ -103,24 +74,20 @@ export const INITIAL_MACHINES: Machine[] = [
     output: { copperWire: 1 },
     productionTime: 3000,
     count: 0,
-    icon: React.createElement(SmelterIcon, { className: "w-8 h-8 text-red-400" }),
-    zoneId: 'surface',
-    unlocked: true,
+    icon: React.createElement(SmelterIcon, { className: "w-8 h-8 text-red-400" })
   },
   {
     id: 'circuit_assembler',
     name: 'Circuit Assembler',
-    description: 'Combines iron plates and copper to produce circuits.',
+    description: 'Combines iron and copper to produce circuits.',
     category: 'Assemblers',
-    baseCost: { money: 10000, ironPlate: 50 },
-    cost: { money: 10000, ironPlate: 50 },
-    recipe: { ironPlate: 2, copperWire: 3 },
-    output: { circuit: 1, researchPoint: 1 },
+    baseCost: { money: 10000 },
+    cost: { money: 10000 },
+    recipe: { ironIngot: 5, copperWire: 3 },
+    output: { circuit: 1 },
     productionTime: 10000,
     count: 0,
-    icon: React.createElement(WrenchScrewdriverIcon, { className: "w-8 h-8 text-accent-light" }),
-    zoneId: 'subsurface',
-    unlocked: false,
+    icon: React.createElement(WrenchScrewdriverIcon, { className: "w-8 h-8 text-accent-light" })
   },
 ];
 
@@ -147,42 +114,10 @@ export const INITIAL_UPGRADES: Upgrade[] = [
   },
 ];
 
-export const INITIAL_ACHIEVEMENTS: Achievement[] = [
-    {
-        id: 'click_1', name: 'Getting Started', description: 'Click the ore.',
-        category: 'clicks', target: 'totalClicks', progress: 0,
-        tiers: [
-            { goal: 1, reward: '+1% Click Power', isClaimed: false },
-            { goal: 100, reward: '+2% Click Power', isClaimed: false },
-            { goal: 1000, reward: '+5% Click Power', isClaimed: false },
-        ]
-    },
-    {
-        id: 'ore_1', name: 'Novice Miner', description: 'Mine some ore.',
-        category: 'ores', target: 'ore', progress: 0,
-        tiers: [
-            { goal: 100, reward: '+1% Miner Speed', isClaimed: false },
-            { goal: 1000, reward: '+2% Miner Speed', isClaimed: false },
-            { goal: 10000, reward: '+5% Miner Speed', isClaimed: false },
-        ]
-    }
-];
-
-export const INITIAL_RESEARCH_TREE: ResearchNode[] = [
-    {
-        id: 'mining_eff_1', name: 'Mining Efficiency I', description: 'Increases all miner output by 10%.',
-        cost: { researchPoint: 5 }, dependencies: [], isUnlocked: false
-    },
-    {
-        id: 'smelting_eff_1', name: 'Smelting Efficiency I', description: 'Increases all smelter output by 10%.',
-        cost: { researchPoint: 10, ironIngot: 100 }, dependencies: ['mining_eff_1'], isUnlocked: false
-    },
-];
-
 export const INITIAL_RESOURCES: Resources = {
-    money: 10, techCore: 0, researchPoint: 0,
+    money: 10, techCore: 0,
     ore: 0, iron: 0, copper: 0, gold: 0, uranium: 0, titanium: 0,
-    ironIngot: 0, ironPlate: 0, copperWire: 0, goldBar: 0, circuit: 0
+    ironIngot: 0, copperWire: 0, goldBar: 0, circuit: 0
 };
 
 export const INITIAL_STATS: Stats = {
